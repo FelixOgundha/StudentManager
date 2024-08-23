@@ -45,28 +45,25 @@ namespace StudentsManager.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _studentRepository.AddStudent(addStudentModel);
+            var result = await _studentRepository.AddStudent(addStudentModel);
 
-            return CreatedAtAction(nameof(GetStudentById), new { id = addStudentModel.Id }, addStudentModel);
+            if (result is false) return BadRequest("Invalid Request, studet already exists");
+
+            return Ok("Student Addedd");
         }
 
         
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateStudent(Guid id, [FromBody] StudentModel studentModel)
+        public async Task<ActionResult> UpdateStudent([FromBody] StudentModel studentModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != studentModel.Id)
-            {
-                return BadRequest("Student ID mismatch");
-            }
-
             await _studentRepository.UpdateStudent(studentModel);
 
-            return NoContent();
+            return Ok("Student Updated successfully");
         }
 
         [HttpDelete("{id}")]
@@ -80,7 +77,7 @@ namespace StudentsManager.API.Controllers
 
             await _studentRepository.DeleteStudent(id);
 
-            return NoContent();
+            return Ok("Student Deleted");
         }
     }
 }

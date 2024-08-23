@@ -17,23 +17,27 @@ namespace DataAccess.Services.Students
             _db = context;
         }
 
-        public async Task AddStudent(AddStudentModel student)
+        public async Task<bool> AddStudent(AddStudentModel student)
         {
             var studentEntity = student.Adapt<Student>();
             _db.Students.Add(studentEntity);
             await _db.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task DeleteStudent(Guid id)
+        public async Task<bool> DeleteStudent(Guid id)
         {
             var studentEntity = await _db.Students.FindAsync(id);
             if (studentEntity == null)
             {
-                return; 
+                return false; 
             }
 
             _db.Students.Remove(studentEntity);
             await _db.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<StudentModel?> GetStudentById(Guid id)
@@ -50,17 +54,19 @@ namespace DataAccess.Services.Students
             return studentEntities.Adapt<List<StudentModel>>();
         }
 
-        public async Task UpdateStudent(StudentModel student)
+        public async Task<bool> UpdateStudent(StudentModel student)
         {
             
             var studentEntity = await _db.Students.FindAsync(student.Id);
             if (studentEntity == null)
             {
-                return; 
+                return false; 
             }
             
             student.Adapt(studentEntity);
             await _db.SaveChangesAsync();
+
+            return true;
         }
     }
 }
