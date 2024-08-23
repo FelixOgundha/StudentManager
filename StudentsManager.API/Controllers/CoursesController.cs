@@ -47,23 +47,20 @@ namespace StudentsManager.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _coursesRepository.AddCourse(addCourseModel);
+            var result = await _coursesRepository.AddCourse(addCourseModel);
 
-            return CreatedAtAction(nameof(GetCourseById), new { id = addCourseModel.Id }, addCourseModel);
+            if (result is false) return BadRequest("Invalid Request");
+
+            return Ok("Course Created Successfully");
         }
 
        
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCourse(Guid id, [FromBody] CourseModel courseModel)
+        public async Task<ActionResult> UpdateCourse([FromBody] CourseModel courseModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
-            if (id != courseModel.Id)
-            {
-                return BadRequest("Course ID mismatch");
             }
 
             await _coursesRepository.UpdateCourse(courseModel);
@@ -83,7 +80,7 @@ namespace StudentsManager.API.Controllers
 
             await _coursesRepository.DeleteCourse(id);
 
-            return NoContent();
+            return Ok("Course Deleted Successfully");
         }
     }
 }

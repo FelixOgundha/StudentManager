@@ -16,20 +16,24 @@ namespace DataAccess.Services.Courses
         {
             _db = database;
         }
-        public async Task AddCourse(AddCourseModel course)
+        public async Task<bool> AddCourse(AddCourseModel course)
         {
             var courseEntity = course.Adapt<Course>(); 
             _db.Courses.Add(courseEntity);
             await _db.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task DeleteCourse(Guid id)
+        public async Task<bool> DeleteCourse(Guid id)
         {
             var courseEntity = await _db.Courses.FindAsync(id);
-            if (courseEntity == null) return;
+            if (courseEntity == null) return false;
 
             _db.Courses.Remove(courseEntity);
             await _db.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<CourseModel?> GetCourseById(Guid id)
@@ -44,13 +48,15 @@ namespace DataAccess.Services.Courses
             return courseEntities.Adapt<List<CourseModel>>();
         }
 
-        public async Task UpdateCourse(CourseModel course)
+        public async Task<bool> UpdateCourse(CourseModel course)
         {
             var courseEntity = await _db.Courses.FindAsync(course.Id);
-            if (courseEntity == null) return;
+            if (courseEntity == null) return false;
 
             course.Adapt(courseEntity); 
             await _db.SaveChangesAsync();
+
+            return true;
         }
     }
 }

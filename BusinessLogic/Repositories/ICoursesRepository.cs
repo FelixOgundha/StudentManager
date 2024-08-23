@@ -5,7 +5,7 @@ namespace BusinessLogic.Repositories
     public interface ICoursesRepository
     {
        
-        Task AddCourse(AddCourseModel course);
+        Task<bool> AddCourse(AddCourseModel course);
 
         
         Task<List<CourseModel>> GetCourses();
@@ -14,9 +14,9 @@ namespace BusinessLogic.Repositories
         Task<CourseModel?> GetCourseById(Guid id);
 
        
-        Task UpdateCourse(CourseModel course);
+        Task<bool> UpdateCourse(CourseModel course);
 
        
-        Task DeleteCourse(Guid id);
+        Task<bool> DeleteCourse(Guid id);
     }
 }
