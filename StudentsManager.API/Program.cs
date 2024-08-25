@@ -21,6 +21,17 @@ builder.Services.AddDbContext<DataDbContext>(options =>
 builder.Services.AddScoped<IStudentRepository, StudentsService>();
 builder.Services.AddScoped<ICoursesRepository, CoursesService>();
 
+//Add Cors policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ClientPermission", policy =>
+    {
+        policy.AllowAnyHeader()
+              .AllowAnyOrigin()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +40,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("ClientPermission");
 
 app.UseHttpsRedirection();
 
